@@ -9,7 +9,9 @@
     "db:migrate": "knex migrate:latest",
     "db:migrate:make": "knex migrate:make",
     "db:seed": "knex seed:run",
-    "db:seed:make": "knex seed:make"
+    "db:seed:make": "knex seed:make",
+    "db:setup": "npm run db:migrate && npm run db:seed",
+    "db:reset": "rm dev.sqlite3 && npm run db:migrate && npm run db:seed"
   },
   "repository": {
     "type": "git",
