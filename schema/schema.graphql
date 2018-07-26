@@ -15,12 +15,19 @@ type Post {
     content: String!
     createdAt: String!
     updatedAt: String!
+
+    author: Person!
+    likes: [Like]!
+    likedBy: [Person]!
 }
 
 type Like {
     personId: ID!
     postId: ID!
     createdAt: String!
+
+    person: Person!
+    post: Post!
 }
 
 type Query {
