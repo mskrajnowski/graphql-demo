@@ -7,6 +7,7 @@ class Person extends Model {
 
     static get relationMappings() {
         const Post = require("./post")
+        const PostLike = require("./post-like")
 
         return {
             posts: {
@@ -15,6 +16,26 @@ class Person extends Model {
                 join: {
                     from: "people.id",
                     to: "posts.author_id",
+                },
+            },
+            likes: {
+                relation: Model.HasManyRelation,
+                modelClass: PostLike,
+                join: {
+                    from: "people.id",
+                    to: "post_likes.person_id",
+                },
+            },
+            liked_posts: {
+                relation: Model.ManyToManyRelation,
+                modelClass: Post,
+                join: {
+                    from: "people.id",
+                    through: {
+                        from: "post_likes.person_id",
+                        to: "post_likes.post_id",
+                    },
+                    to: "posts.id",
                 },
             },
         }

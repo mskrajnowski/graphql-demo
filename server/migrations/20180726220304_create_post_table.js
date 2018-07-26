@@ -11,6 +11,8 @@ exports.up = function(knex, Promise) {
         t.foreign("author_id")
             .references("id")
             .inTable("people")
+
+        t.index("author_id")
     })
 }
 

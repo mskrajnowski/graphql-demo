@@ -1,11 +1,12 @@
-const { Person, Post } = require("./index")
+const { Person, Post, PostLike } = require("./index")
 
 main()
 
 async function main() {
     // delete all
-    await Person.query().delete()
+    await PostLike.query().delete()
     await Post.query().delete()
+    await Person.query().delete()
 
     zbyszek = await Person.query().insertAndFetch({ name: "Zbyszek" })
     console.log("zbyszek", zbyszek)
@@ -16,22 +17,21 @@ async function main() {
     })
     console.log("post", post)
 
+    like = await PostLike.query().insertAndFetch({
+        person_id: zbyszek.id,
+        post_id: post.id,
+    })
+    console.log("like", like)
+
     zbyszek = await Person.query()
-        .eager("posts")
+        .eager("[posts, liked_posts, likes.[post, person]]")
         .first()
-    console.log("zbyszek with posts", zbyszek)
+    console.log("uber zbyszek", zbyszek)
 
     post = await Post.query()
-        .eager("author")
+        .eager("[author, liked_by, likes.[post, person]]")
         .first()
-    console.log("post with author", post)
-
-    await Person.query().delete()
-
-    post = await Post.query()
-        .eager("author")
-        .first()
-    console.log("post without author", post)
+    console.log("uber post", post)
 
     process.exit(0)
 }
