@@ -20,6 +20,7 @@ const resolvers = {
             Person.query()
                 .limit(10)
                 .select(),
+
         post: (_, { id }) => Post.query().findById(id),
         posts: () =>
             Post.query()
@@ -29,6 +30,7 @@ const resolvers = {
     Person: {
         createdAt: async person => new Date(person.createdAt).toISOString(),
         updatedAt: async person => new Date(person.updatedAt).toISOString(),
+
         posts: async person => person.$relatedQuery("posts"),
         likes: async person => person.$relatedQuery("likes"),
         likedPosts: async person => person.$relatedQuery("likedPosts"),
@@ -36,12 +38,14 @@ const resolvers = {
     Post: {
         createdAt: async person => new Date(person.createdAt).toISOString(),
         updatedAt: async person => new Date(person.updatedAt).toISOString(),
+
         author: async post => post.$relatedQuery("author"),
         likes: async post => post.$relatedQuery("likes"),
         likedBy: async post => post.$relatedQuery("likedBy"),
     },
     Like: {
         createdAt: async person => new Date(person.createdAt).toISOString(),
+
         person: async like => like.$relatedQuery("person").first(),
         post: async like => like.$relatedQuery("post").first(),
     },
