@@ -1,20 +1,20 @@
 const { Model } = require("objection")
 
-class Person extends Model {
+class Post extends Model {
     static get tableName() {
-        return "people"
+        return "posts"
     }
 
     static get relationMappings() {
-        const Post = require("./post")
+        const Person = require("./person")
 
         return {
-            posts: {
-                relation: Model.HasManyRelation,
-                modelClass: Post,
+            author: {
+                relation: Model.BelongsToOneRelation,
+                modelClass: Person,
                 join: {
-                    from: "people.id",
-                    to: "posts.author_id",
+                    from: "posts.author_id",
+                    to: "people.id",
                 },
             },
         }
@@ -30,4 +30,4 @@ class Person extends Model {
     }
 }
 
-module.exports = Person
+module.exports = Post
