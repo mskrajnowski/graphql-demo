@@ -28,6 +28,7 @@
   "homepage": "https://github.com/mskrajnowski/graphql-demo#readme",
   "dependencies": {
     "apollo-server": "^2.0.0",
+    "faker": "^4.1.0",
     "graphql": "^0.13.2",
     "knex": "^0.15.2",
     "objection": "^1.2.0",
