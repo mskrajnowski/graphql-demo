@@ -11,5 +11,7 @@ const knex = Knex({
     ...knexSnakeCaseMappers(),
 })
 
+knex.on("query", e => console.log(e.sql, e.bindings))
+
 // Give the knex object to objection.
 Model.knex(knex)
