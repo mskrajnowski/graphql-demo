@@ -1,0 +1,33 @@
+type Person {
+    id: ID!
+    name: String!
+    createdAt: String!
+    updatedAt: String!
+
+    posts: [Post]!
+    likes: [Like]!
+    likedPosts: [Post]!
+}
+
+type Post {
+    id: ID!
+    authorId: ID!
+    content: String!
+    createdAt: String!
+    updatedAt: String!
+}
+
+type Like {
+    personId: ID!
+    postId: ID!
+    createdAt: String!
+}
+
+type Query {
+    people: [Person]!
+    posts: [Post]!
+}
+
+schema {
+    query: Query
+}
