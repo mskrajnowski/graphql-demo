@@ -31,7 +31,9 @@ type Like {
 }
 
 type Query {
+    person(id: ID!): Person
     people: [Person]!
+    post(id: ID!): Post
     posts: [Post]!
 }
 
