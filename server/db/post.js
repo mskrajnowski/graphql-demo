@@ -14,7 +14,7 @@ class Post extends Model {
                 relation: Model.BelongsToOneRelation,
                 modelClass: Person,
                 join: {
-                    from: "posts.author_id",
+                    from: "posts.authorId",
                     to: "people.id",
                 },
             },
@@ -23,17 +23,17 @@ class Post extends Model {
                 modelClass: PostLike,
                 join: {
                     from: "posts.id",
-                    to: "post_likes.post_id",
+                    to: "post_likes.postId",
                 },
             },
-            liked_by: {
+            likedBy: {
                 relation: Model.ManyToManyRelation,
                 modelClass: Person,
                 join: {
                     from: "posts.id",
                     through: {
-                        from: "post_likes.post_id",
-                        to: "post_likes.person_id",
+                        from: "post_likes.postId",
+                        to: "post_likes.personId",
                     },
                     to: "people.id",
                 },

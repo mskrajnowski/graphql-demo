@@ -14,7 +14,7 @@ class PostLike extends Model {
                 relation: Model.BelongsToOneRelation,
                 modelClass: Person,
                 join: {
-                    from: "post_likes.person_id",
+                    from: "post_likes.personId",
                     to: "people.id",
                 },
             },
@@ -22,7 +22,7 @@ class PostLike extends Model {
                 relation: Model.BelongsToOneRelation,
                 modelClass: Post,
                 join: {
-                    from: "post_likes.post_id",
+                    from: "post_likes.postId",
                     to: "posts.id",
                 },
             },
