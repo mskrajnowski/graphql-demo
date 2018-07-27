@@ -2,7 +2,7 @@ const { ApolloServer, gql } = require("apollo-server")
 const fs = require("fs")
 const path = require("path")
 const Dataloader = require("dataloader")
-const { keyBy } = require("lodash")
+const { keyBy, groupBy } = require("lodash")
 
 const { Person, Post, PostLike } = require("./db")
 // Type definitions define the "shape" of your data and specify
@@ -32,8 +32,10 @@ const resolvers = {
         createdAt: async person => new Date(person.createdAt).toISOString(),
         updatedAt: async person => new Date(person.updatedAt).toISOString(),
 
-        posts: async person => person.$relatedQuery("posts"),
-        likes: async person => person.$relatedQuery("likes"),
+        posts: async (person, _, { loaders }) =>
+            loaders.post.byAuthorId.load(person.id),
+        likes: async (person, _, { loaders }) =>
+            loaders.like.byPersonId.load(person.id),
         likedPosts: async person => person.$relatedQuery("likedPosts"),
     },
     Post: {
@@ -42,7 +44,8 @@ const resolvers = {
 
         author: async (post, _, { loaders }) =>
             loaders.person.byId.load(post.authorId),
-        likes: async post => post.$relatedQuery("likes"),
+        likes: async (post, _, { loaders }) =>
+            loaders.like.byPostId.load(post.id),
         likedBy: async post => post.$relatedQuery("likedBy"),
     },
     Like: {
@@ -69,6 +72,23 @@ async function context() {
                 const posts = await Post.query().findByIds(ids)
                 const postsById = keyBy(posts, "id")
                 return ids.map(id => postsById[id])
+            }),
+            byAuthorId: new Dataloader(async ids => {
+                const posts = await Post.query().whereIn("authorId", ids)
+                const postsByAuthorId = groupBy(posts, "authorId")
+                return ids.map(id => postsByAuthorId[id] || [])
+            }),
+        },
+        like: {
+            byPersonId: new Dataloader(async ids => {
+                const likes = await PostLike.query().whereIn("personId", ids)
+                const likesByPersonId = groupBy(likes, "personId")
+                return ids.map(id => likesByPersonId[id] || [])
+            }),
+            byPostId: new Dataloader(async ids => {
+                const likes = await PostLike.query().whereIn("postId", ids)
+                const likesByPostId = groupBy(likes, "postId")
+                return ids.map(id => likesByPostId[id] || [])
             }),
         },
     }
