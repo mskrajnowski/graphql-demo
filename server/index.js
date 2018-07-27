@@ -5,6 +5,7 @@ const Dataloader = require("dataloader")
 const { keyBy, groupBy } = require("lodash")
 
 const { Person, Post, PostLike } = require("./db")
+
 // Type definitions define the "shape" of your data and specify
 // which ways the data can be fetched from the GraphQL server.
 const typeDefs = fs.readFileSync(
