@@ -13,6 +13,9 @@ const typeDefs = fs.readFileSync(
     "utf8"
 )
 
+const createdAt = ({ createdAt }) => new Date(createdAt).toISOString()
+const updatedAt = ({ updatedAt }) => new Date(updatedAt).toISOString()
+
 // Resolvers define the technique for fetching the types in the
 // schema.  We'll retrieve books from the "books" array above.
 const resolvers = {
@@ -34,8 +37,8 @@ const resolvers = {
         },
     },
     Person: {
-        createdAt: person => new Date(person.createdAt).toISOString(),
-        updatedAt: person => new Date(person.updatedAt).toISOString(),
+        createdAt,
+        updatedAt,
 
         posts: async (person, _, { loaders }) =>
             loaders.post.byAuthorId.load(person.id),
@@ -49,8 +52,8 @@ const resolvers = {
         },
     },
     Post: {
-        createdAt: post => new Date(post.createdAt).toISOString(),
-        updatedAt: post => new Date(post.updatedAt).toISOString(),
+        createdAt,
+        updatedAt,
 
         author: async (post, _, { loaders }) =>
             loaders.person.byId.load(post.authorId),
@@ -64,7 +67,7 @@ const resolvers = {
         },
     },
     Like: {
-        createdAt: like => new Date(like.createdAt).toISOString(),
+        createdAt,
 
         person: async (like, _, { loaders }) =>
             loaders.person.byId.load(like.personId),
