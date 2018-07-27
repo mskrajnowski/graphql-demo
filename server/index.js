@@ -34,8 +34,8 @@ const resolvers = {
         },
     },
     Person: {
-        createdAt: async person => new Date(person.createdAt).toISOString(),
-        updatedAt: async person => new Date(person.updatedAt).toISOString(),
+        createdAt: person => new Date(person.createdAt).toISOString(),
+        updatedAt: person => new Date(person.updatedAt).toISOString(),
 
         posts: async (person, _, { loaders }) =>
             loaders.post.byAuthorId.load(person.id),
@@ -49,8 +49,8 @@ const resolvers = {
         },
     },
     Post: {
-        createdAt: async person => new Date(person.createdAt).toISOString(),
-        updatedAt: async person => new Date(person.updatedAt).toISOString(),
+        createdAt: post => new Date(post.createdAt).toISOString(),
+        updatedAt: post => new Date(post.updatedAt).toISOString(),
 
         author: async (post, _, { loaders }) =>
             loaders.person.byId.load(post.authorId),
@@ -64,7 +64,7 @@ const resolvers = {
         },
     },
     Like: {
-        createdAt: async person => new Date(person.createdAt).toISOString(),
+        createdAt: like => new Date(like.createdAt).toISOString(),
 
         person: async (like, _, { loaders }) =>
             loaders.person.byId.load(like.personId),
