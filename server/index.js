@@ -16,17 +16,13 @@ const typeDefs = fs.readFileSync(
 // schema.  We'll retrieve books from the "books" array above.
 const resolvers = {
     Query: {
-        person: (_, { id }, { loaders }) => loaders.person.byId.load(id),
-        people: () =>
-            Person.query()
-                .limit(10)
-                .select(),
+        person: async (_, { id }, { loaders }) => loaders.person.byId.load(id),
+        people: async (_, { page = 1 }) =>
+            (await Person.query().page(page - 1, 10)).results,
 
-        post: (_, { id }, { loaders }) => loaders.post.byId.load(id),
-        posts: () =>
-            Post.query()
-                .limit(10)
-                .select(),
+        post: async (_, { id }, { loaders }) => loaders.post.byId.load(id),
+        posts: async (_, { page = 1 }) =>
+            (await Post.query().page(page - 1, 10)).results,
     },
     Person: {
         createdAt: async person => new Date(person.createdAt).toISOString(),

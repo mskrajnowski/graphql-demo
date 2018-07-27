@@ -32,9 +32,9 @@ type Like {
 
 type Query {
     person(id: ID!): Person
-    people: [Person]!
+    people(page: Int): [Person]!
     post(id: ID!): Post
-    posts: [Post]!
+    posts(page: Int): [Post]!
 }
 
 schema {
