@@ -36,7 +36,12 @@ const resolvers = {
             loaders.post.byAuthorId.load(person.id),
         likes: async (person, _, { loaders }) =>
             loaders.like.byPersonId.load(person.id),
-        likedPosts: async person => person.$relatedQuery("likedPosts"),
+        likedPosts: async (person, _, { loaders }) => {
+            const likes = await loaders.like.byPersonId.load(person.id)
+            return Promise.all(
+                likes.map(like => loaders.post.byId.load(like.postId))
+            )
+        },
     },
     Post: {
         createdAt: async person => new Date(person.createdAt).toISOString(),
@@ -46,7 +51,12 @@ const resolvers = {
             loaders.person.byId.load(post.authorId),
         likes: async (post, _, { loaders }) =>
             loaders.like.byPostId.load(post.id),
-        likedBy: async post => post.$relatedQuery("likedBy"),
+        likedBy: async (post, _, { loaders }) => {
+            const likes = await loaders.like.byPostId.load(post.id)
+            return Promise.all(
+                likes.map(like => loaders.person.byId.load(like.personId))
+            )
+        },
     },
     Like: {
         createdAt: async person => new Date(person.createdAt).toISOString(),
