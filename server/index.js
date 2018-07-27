@@ -17,12 +17,20 @@ const typeDefs = fs.readFileSync(
 const resolvers = {
     Query: {
         person: async (_, { id }, { loaders }) => loaders.person.byId.load(id),
-        people: async (_, { page = 1 }) =>
-            (await Person.query().page(page - 1, 10)).results,
+        people: async (_, { page = 1 }, { loaders }) => {
+            const people = (await Person.query().page(page - 1, 10)).results
+            people.forEach(person =>
+                loaders.person.byId.prime(person.id, person)
+            )
+            return people
+        },
 
         post: async (_, { id }, { loaders }) => loaders.post.byId.load(id),
-        posts: async (_, { page = 1 }) =>
-            (await Post.query().page(page - 1, 10)).results,
+        posts: async (_, { page = 1 }, { loaders }) => {
+            const posts = (await Post.query().page(page - 1, 10)).results
+            posts.forEach(post => loaders.post.byId.prime(post.id, post))
+            return posts
+        },
     },
     Person: {
         createdAt: async person => new Date(person.createdAt).toISOString(),
