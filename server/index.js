@@ -93,6 +93,7 @@ async function context() {
             }),
             byAuthorId: new Dataloader(async ids => {
                 const posts = await Post.query().whereIn("authorId", ids)
+                posts.forEach(post => loaders.post.byId.prime(post.id, post))
                 const postsByAuthorId = groupBy(posts, "authorId")
                 return ids.map(id => postsByAuthorId[id] || [])
             }),
